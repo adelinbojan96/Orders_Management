@@ -51,11 +51,7 @@ public class ClientDAO {
         PreparedStatement statement = null;
         try {
             String insertQuery = "INSERT INTO client (id, name, email, age) VALUES (?, ?, ?, ?)";
-            statement = connection.prepareStatement(insertQuery);
-            statement.setInt(1, client.id());
-            statement.setString(2, client.name());
-            statement.setString(3, client.email());
-            statement.setInt(4, client.age());
+            statement = updateClient(insertQuery, client);
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -75,12 +71,9 @@ public class ClientDAO {
     {
         PreparedStatement updateStatement = null;
         try {
-            String updateQuery = "UPDATE client SET name = ?, email = ?, age = ? WHERE id = ?";
-            updateStatement = connection.prepareStatement(updateQuery);
-            updateStatement.setString(1, newClient.name());
-            updateStatement.setString(2, newClient.email());
-            updateStatement.setInt(3, newClient.age());
-            updateStatement.setInt(4, id);
+            String updateQuery = "UPDATE client SET id = ?, name = ?, email = ?, age = ? WHERE id = ?";
+            updateStatement = updateClient(updateQuery, newClient);
+            updateStatement.setInt(5, id);
 
             int rowsUpdated = updateStatement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -120,6 +113,16 @@ public class ClientDAO {
                 e.printStackTrace();
             }
         }
+    }
+    private PreparedStatement updateClient(String updateQuery, Client newClient) throws SQLException {
+        PreparedStatement updateStatement;
+        updateStatement = connection.prepareStatement(updateQuery);
+        updateStatement.setInt(1, newClient.id());
+        updateStatement.setString(2, newClient.name());
+        updateStatement.setString(3, newClient.email());
+        updateStatement.setInt(4, newClient.age());
+
+        return updateStatement;
     }
 }
 

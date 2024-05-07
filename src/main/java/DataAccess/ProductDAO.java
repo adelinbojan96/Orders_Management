@@ -48,17 +48,12 @@ public class ProductDAO {
     }
     public void addProduct(Product product)
     {
-        PreparedStatement statement = null;
+        PreparedStatement addStatement = null;
         try {
-            String insertQuery = "INSERT INTO product (id_product, name, description, price, category) VALUES (?, ?, ?, ?, ?)";
-            statement = connection.prepareStatement(insertQuery);
-            statement.setInt(1, product.id());
-            statement.setString(2, product.productName());
-            statement.setString(3, product.description());
-            statement.setFloat(4, product.price());
-            statement.setString(5, product.category());
+            String insertQuery = "INSERT INTO product (id_product, name, description, price, category, quantity) VALUES (?, ?, ?, ?, ?, ?)";
+            addStatement = updateProduct(insertQuery, product);
 
-            int rowsInserted = statement.executeUpdate();
+            int rowsInserted = addStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("A new product was inserted successfully!");
             }
@@ -66,7 +61,7 @@ public class ProductDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (statement != null) statement.close();
+                if (addStatement != null) addStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -76,13 +71,9 @@ public class ProductDAO {
     {
         PreparedStatement updateStatement = null;
         try {
-            String updateQuery = "UPDATE product SET name = ?, description = ?, price = ?, category = ? WHERE id = ?";
-            updateStatement = connection.prepareStatement(updateQuery);
-            updateStatement.setString(1, newProduct.productName());
-            updateStatement.setString(2, newProduct.description());
-            updateStatement.setFloat(3, newProduct.price());
-            updateStatement.setString(4, newProduct.category());
-            updateStatement.setInt(5, newProduct.id());
+            String updateQuery = "UPDATE product SET id_product = ?, name = ?, description = ?, price = ?, category = ?, quantity = ? WHERE id_product = ?";
+            updateStatement = updateProduct(updateQuery, newProduct);
+            updateStatement.setInt(7, newProduct.id());
 
             int rowsUpdated = updateStatement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -123,4 +114,15 @@ public class ProductDAO {
             }
         }
     }
+    private PreparedStatement updateProduct(String updateQuery, Product newProduct) throws SQLException {
+        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+        updateStatement.setInt(1, newProduct.id());
+        updateStatement.setString(2, newProduct.productName());
+        updateStatement.setString(3, newProduct.description());
+        updateStatement.setFloat(4, newProduct.price());
+        updateStatement.setString(5, newProduct.category());
+        updateStatement.setInt(6, newProduct.quantity());
+        return updateStatement;
+    }
+
 }

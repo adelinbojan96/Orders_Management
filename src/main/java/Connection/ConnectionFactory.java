@@ -1,5 +1,6 @@
 package Connection;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -14,19 +15,12 @@ public class ConnectionFactory {
     }
     private void loadProperties() {
         properties = new Properties();
-        try (InputStream input = ConnectionFactory.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find db.properties");
-                return;
-            }
-
-            //load a properties file from class path
+        try (InputStream input = new FileInputStream("src/main/java/Connection/db.properties")) {
             properties.load(input);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 properties.getProperty("db.url"),
