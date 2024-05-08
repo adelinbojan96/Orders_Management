@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import Connection.ConnectionFactory;
 import Model.Product;
 
+import javax.swing.*;
+
 public class ProductDAO {
     private Connection connection;
     public ProductDAO()
@@ -16,7 +18,7 @@ public class ProductDAO {
         try {
             connection = connectionFactory.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         }
     }
     public boolean checkUniqueness(int id)
@@ -24,7 +26,7 @@ public class ProductDAO {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            String query = "SELECT COUNT(*) FROM product WHERE id = ?";
+            String query = "SELECT COUNT(*) FROM product WHERE id_product = ?";
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
 
@@ -35,13 +37,13 @@ public class ProductDAO {
                 return count == 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
         return false;
@@ -55,15 +57,15 @@ public class ProductDAO {
 
             int rowsInserted = addStatement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("A new product was inserted successfully!");
+                JOptionPane.showMessageDialog(null, "A new product was inserted successfully!");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (addStatement != null) addStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
     }
@@ -77,17 +79,17 @@ public class ProductDAO {
 
             int rowsUpdated = updateStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Product with ID " + id + " was updated successfully!");
+                JOptionPane.showMessageDialog(null, "Product with ID " + id + " was updated successfully!");
             } else {
-                System.out.println("No product found with ID " + id + ". No update performed.");
+                JOptionPane.showMessageDialog(null, "No product found with ID " + id + ". No update performed.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (updateStatement != null) updateStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
     }
@@ -95,22 +97,22 @@ public class ProductDAO {
     {
         PreparedStatement statement = null;
         try {
-            String deleteQuery = "DELETE FROM product WHERE id = ?";
+            String deleteQuery = "DELETE FROM product WHERE id_product = ?";
             statement = connection.prepareStatement(deleteQuery);
             statement.setInt(1, id);
 
             int rowsDeleted = statement.executeUpdate();
             if (rowsDeleted > 0) {
-                System.out.println("Product with ID " + id + " was deleted successfully!");
+                JOptionPane.showMessageDialog(null, "Product with ID " + id + " was deleted successfully!");
             } else
-                System.out.println("No product found with ID " + id + ". No deletion performed.");
+                JOptionPane.showMessageDialog(null, "No product found with ID " + id + ". No deletion performed.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (statement != null) statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
     }

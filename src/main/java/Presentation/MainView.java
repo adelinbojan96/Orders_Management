@@ -17,7 +17,7 @@ public class MainView extends JDialog{
     public MainView()
     {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(1280, 720);
+        setSize(1000, 720);
         setTitle("Choose the desired operation");
 
         addImages();

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import Connection.ConnectionFactory;
 import Model.Client;
 
+import javax.swing.*;
+
 public class ClientDAO {
     private Connection connection;
     public ClientDAO()
@@ -55,7 +57,7 @@ public class ClientDAO {
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("A new client was inserted successfully!");
+                JOptionPane.showMessageDialog(null, "A new client was inserted successfully!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,9 +79,9 @@ public class ClientDAO {
 
             int rowsUpdated = updateStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Client with ID " + id + " was updated successfully!");
+                JOptionPane.showMessageDialog(null, "Client with ID " + id + " was updated successfully!");
             } else {
-                System.out.println("No client found with ID " + id + ". No update performed.");
+                JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No update performed.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,9 +103,9 @@ public class ClientDAO {
 
             int rowsDeleted = statement.executeUpdate();
             if (rowsDeleted > 0) {
-                System.out.println("Client with ID " + id + " was deleted successfully!");
+                JOptionPane.showMessageDialog(null, "Client with ID " + id + " was deleted successfully!");
             } else
-                System.out.println("No client found with ID " + id + ". No deletion performed.");
+                JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No deletion performed.");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
