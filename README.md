@@ -1,0 +1,1 @@
+make sure to add db.properties to src/main/java/Connection/ such that it can be accessed by ConnectionFactory
