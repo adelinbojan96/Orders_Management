@@ -2,6 +2,7 @@ package BusinessLogic;
 
 import DataAccess.ClientDAO;
 import Model.Client;
+import Model.ObjectModel;
 import Presentation.Controller;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class ClientBLL extends BaseBLL{
             clientDAO.addClient(newClient);
             Object[] inputData = new Object[]{id, name, email, age, null};
             try {
-                updateTable(inputData, "Add");
+                updateTable(newClient, inputData, "Add");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to add client");
             }
@@ -41,7 +42,7 @@ public class ClientBLL extends BaseBLL{
             clientDAO.editClient(firstIdDB, newClient);
             Object[] inputData = new Object[]{id, name, email, age, firstIdTable};
             try {
-                updateTable(inputData, "Edit");
+                updateTable(newClient, inputData,"Edit");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to edit client");
             }
@@ -56,13 +57,22 @@ public class ClientBLL extends BaseBLL{
         {
             clientDAO.deleteClient(firstIdDB);
             Object[] inputData = new Object[]{firstIdTable};
+            ObjectModel nullObjectModel = new ObjectModel() {};
             try {
-                updateTable(inputData, "Delete");
+                updateTable(nullObjectModel, inputData, "Delete");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to delete client");
             }
         }
         else
             JOptionPane.showMessageDialog(null, "The user with the id " + firstIdDB + " does not exist in the database");
+    }
+    public void viewClients()
+    {
+        try {
+            updateWithAllElementsFromDB("Client");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

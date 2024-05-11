@@ -1,6 +1,7 @@
 package BusinessLogic;
 
 import DataAccess.ProductDAO;
+import Model.ObjectModel;
 import Model.Product;
 import Presentation.Controller;
 
@@ -24,7 +25,7 @@ public class ProductBLL extends BaseBLL{
             productDAO.addProduct(newProduct);
             Object[] inputData = new Object[]{id, productName, description, price, category, quantity};
             try {
-                updateTable(inputData, "Add");
+                updateTable(newProduct, inputData, "Add");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to add product");
             }
@@ -41,7 +42,7 @@ public class ProductBLL extends BaseBLL{
             productDAO.editProduct(firstIdDB, newProduct);
             Object[] inputData = new Object[]{id, productName, description, price, category, quantity, firstIdTable};
             try {
-                updateTable(inputData, "Edit");
+                updateTable(newProduct, inputData, "Edit");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to edit product");
             }
@@ -56,13 +57,22 @@ public class ProductBLL extends BaseBLL{
         {
             productDAO.deleteProduct(firstIdDB);
             Object[] inputData = new Object[]{firstIdTable};
+            ObjectModel nullObjectModel = new ObjectModel() {};
             try {
-                updateTable(inputData, "Delete");
+                updateTable(nullObjectModel, inputData, "Delete");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error trying to delete product");
             }
         }
         else
             JOptionPane.showMessageDialog(null, "The product with the id " + firstIdDB + " does not exist in the database");
+    }
+    public void viewProducts()
+    {
+        try {
+            updateWithAllElementsFromDB("Product");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

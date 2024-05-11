@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Connection.ConnectionFactory;
 import Model.Product;
@@ -115,6 +116,37 @@ public class ProductDAO {
                 JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
+    }
+    public ArrayList<Object[]> getAllProducts() {
+        ArrayList<Object[]> products = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM product";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_product");
+                String productName = resultSet.getString("name");
+                String email = resultSet.getString("description");
+                float price = resultSet.getFloat("price");
+                String category = resultSet.getString("category");
+                int quantity = resultSet.getInt("quantity");
+
+                Object[] productData = {id, productName, email, price, category, quantity};
+                products.add(productData);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close(); if (statement != null) statement.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
+            }
+        }
+        return products;
     }
     private PreparedStatement updateProduct(String updateQuery, Product newProduct) throws SQLException {
         PreparedStatement updateStatement = connection.prepareStatement(updateQuery);

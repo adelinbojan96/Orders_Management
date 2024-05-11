@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Controller {
     MainView mainFrame;
@@ -16,7 +17,7 @@ public class Controller {
     private JButton editButton;
     private JButton deleteButton;
     JButton viewButton;
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
     private JTable elementsTable = null;
     private final ArrayList<Object[]> objectsInTable;
     public Controller(MainView mainFrame, String choice)
@@ -54,6 +55,7 @@ public class Controller {
             int idClicked = elementsTable.getSelectedRow();
             deleteClient(idClicked, clientBLL);
         });
+        viewButton.addActionListener(e -> clientBLL.viewClients());
         clientFrame.add(clientButtonPanel, BorderLayout.SOUTH);
         clientFrame.setVisible(true);
 
@@ -88,7 +90,7 @@ public class Controller {
             int idClicked = elementsTable.getSelectedRow();
             deleteProduct(idClicked, productBLL);
         });
-
+        viewButton.addActionListener(e -> productBLL.viewProducts());
         productFrame.add(productButtonPanel, BorderLayout.SOUTH);
         productFrame.setVisible(true);
 
@@ -103,23 +105,11 @@ public class Controller {
     private JScrollPane getScrollPaneClient()
     {
         this.elementsTable = new JTable(tableModel);
-        tableModel.addColumn("ID");
-        tableModel.addColumn("Name");
-        tableModel.addColumn("E-mail");
-        tableModel.addColumn("Age");
-
         return new JScrollPane(elementsTable);
     }
     private JScrollPane getScrollPaneProduct()
     {
         this.elementsTable = new JTable(tableModel);
-        tableModel.addColumn("ID");
-        tableModel.addColumn("Product name");
-        tableModel.addColumn("Description");
-        tableModel.addColumn("Price");
-        tableModel.addColumn("Category");
-        tableModel.addColumn("Quantity");
-
         return new JScrollPane(elementsTable);
     }
     private JPanel getButtons(String name)
@@ -152,11 +142,12 @@ public class Controller {
         inputPanel.add(emailField);
         inputPanel.add(new JLabel("Age:"));
         inputPanel.add(ageField);
-
+        boolean validity = clientValidity(idField.getText(), nameField.getText(), emailField.getText(), ageField.getText());
         int result = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Client Details", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
+        if (result == JOptionPane.OK_OPTION && validity) {
             return new Object[]{Integer.parseInt(idField.getText()), nameField.getText(), emailField.getText(), Integer.parseInt(ageField.getText())};
         }
+        JOptionPane.showMessageDialog(null, "Please complete all fields.");
         return null;
     }
     private Object[] showInputDialogProduct() {
@@ -181,12 +172,13 @@ public class Controller {
         inputPanel.add(categoryField);
         inputPanel.add(new JLabel("Quantity:"));
         inputPanel.add(quantityField);
-
-        int result = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Client Details", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
+        boolean validity = productValidity(idField.getText(), productNameField.getText(), descriptionField.getText(), priceField.getText(), categoryField.getText(), quantityField.getText());
+        int result = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Product Details", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION && validity) {
             return new Object[]{Integer.parseInt(idField.getText()), productNameField.getText(), descriptionField.getText(),
                     Float.parseFloat(priceField.getText()), categoryField.getText(), Integer.parseInt(quantityField.getText())};
         }
+        JOptionPane.showMessageDialog(null, "Please complete all fields.");
         return null;
     }
     private void addClient(ClientBLL clientBLL)
@@ -204,7 +196,7 @@ public class Controller {
     private void editClient(int firstId, ClientBLL clientBLL)
     {
         Object[] inputData = showInputDialogClient();
-        if (inputData != null) {
+        if (inputData != null && firstId != -1) {
             int id = (int) inputData[0];
             String name = (String) inputData[1];
             String email = (String) inputData[2];
@@ -212,10 +204,15 @@ public class Controller {
 
             clientBLL.editClient((Integer) objectsInTable.get(firstId)[0], firstId, id, name, email, age);
         }
+        else if(inputData != null)
+            JOptionPane.showMessageDialog(null, "Please select an item before editing something.");
     }
     private void deleteClient(int firstId, ClientBLL clientBLL)
     {
-        clientBLL.deleteClient((int) objectsInTable.get(firstId)[0], firstId);
+        if(firstId != -1)
+            clientBLL.deleteClient((int) objectsInTable.get(firstId)[0], firstId);
+        else
+            JOptionPane.showMessageDialog(null, "Please select an item before deleting something.");
     }
     private void addProduct(ProductBLL productBLL)
     {
@@ -234,7 +231,7 @@ public class Controller {
     private void editProduct(int firstId, ProductBLL productBLL)
     {
         Object[] inputData = showInputDialogProduct();
-        if (inputData != null) {
+        if (inputData != null && firstId != -1) {
             var id = (int) inputData[0];
             String productName = (String) inputData[1];
             String description = (String) inputData[2];
@@ -244,9 +241,24 @@ public class Controller {
 
             productBLL.editProduct((Integer) objectsInTable.get(firstId)[0], firstId, id, productName, description, price, category, quantity);
         }
+        else if(inputData != null)
+            JOptionPane.showMessageDialog(null, "Please select an item before editing something.");
     }
     private void deleteProduct(int firstId, ProductBLL productBLL)
     {
-        productBLL.deleteProduct((int) objectsInTable.get(firstId)[0], firstId);
+        if(firstId != -1)
+            productBLL.deleteProduct((int) objectsInTable.get(firstId)[0], firstId);
+        else
+            JOptionPane.showMessageDialog(null, "Please select an item before deleting something.");
+    }
+    private boolean clientValidity(String id, String name, String email, String age)
+    {
+        return !Objects.equals(id, null) && !Objects.equals(name, null) && !Objects.equals(email, null) && !Objects.equals(age, null);
+    }
+    private boolean productValidity(String id, String productName, String description, String price, String category, String quantity)
+    {
+        return !Objects.equals(id, null) && !Objects.equals(productName, null) && !Objects.equals(description, null) && !Objects.equals(price, null)
+                && !Objects.equals(category, null) && !Objects.equals(quantity, null);
     }
 }
+

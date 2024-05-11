@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Connection.ConnectionFactory;
 import Model.Client;
@@ -18,7 +19,7 @@ public class ClientDAO {
         try {
             connection = connectionFactory.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         }
     }
     public boolean checkUniqueness(int id)
@@ -37,13 +38,13 @@ public class ClientDAO {
                 return count == 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
         return false;
@@ -60,12 +61,12 @@ public class ClientDAO {
                 JOptionPane.showMessageDialog(null, "A new client was inserted successfully!");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (statement != null) statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
     }
@@ -84,12 +85,12 @@ public class ClientDAO {
                 JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No update performed.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (updateStatement != null) updateStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
     }
@@ -107,14 +108,44 @@ public class ClientDAO {
             } else
                 JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No deletion performed.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
             try {
                 if (statement != null) statement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
             }
         }
+    }
+    public ArrayList<Object[]> getAllClients() {
+        ArrayList<Object[]> clients = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM client";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                int age = resultSet.getInt("age");
+
+                Object[] clientData = {id, name, email, age};
+                clients.add(clientData);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
+            }
+        }
+        return clients;
     }
     private PreparedStatement updateClient(String updateQuery, Client newClient) throws SQLException {
         PreparedStatement updateStatement;
