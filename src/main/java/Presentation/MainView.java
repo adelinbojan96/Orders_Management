@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MainView extends JDialog{
     private JPanel mainPanel;
@@ -17,7 +18,7 @@ public class MainView extends JDialog{
     public MainView()
     {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(1000, 720);
+        setSize(1000, 700);
         setTitle("Choose the desired operation");
 
         addImages();
@@ -31,13 +32,25 @@ public class MainView extends JDialog{
 
         performClientOperationButton.addActionListener(e -> {
             dispose();
-            new Controller(MainView.this, "Client");
+            try {
+                new Controller(MainView.this, "Client");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         performProductOperationButton.addActionListener(e -> {
             dispose();
-            new Controller(MainView.this, "Product");
+            try {
+                new Controller(MainView.this, "Product");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
-
+        performOrderOperationButton.addActionListener(e ->
+        {
+            dispose();
+            new ProductOrders();
+        });
         setModal(true);
         setVisible(true);
     }

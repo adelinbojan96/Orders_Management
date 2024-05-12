@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -20,8 +21,7 @@ public class Controller {
     private final DefaultTableModel tableModel;
     private JTable elementsTable = null;
     private final ArrayList<Object[]> objectsInTable;
-    public Controller(MainView mainFrame, String choice)
-    {
+    public Controller(MainView mainFrame, String choice) throws SQLException {
         this.mainFrame = mainFrame;
         this.tableModel = new DefaultTableModel();
         this.objectsInTable = new ArrayList<>();
@@ -30,8 +30,7 @@ public class Controller {
         else if(choice.equals("Product"))
             showProductOperations();
     }
-    private void showClientOperations()
-    {
+    private void showClientOperations() throws SQLException {
         ClientBLL clientBLL = new ClientBLL(this);
 
         JFrame clientFrame = new JFrame("Client Operations");
@@ -67,8 +66,7 @@ public class Controller {
             }
         });
     }
-    private void showProductOperations()
-    {
+    private void showProductOperations() throws SQLException {
         ProductBLL productBLL = new ProductBLL(this);
 
         JFrame productFrame = new JFrame("Product Operations");

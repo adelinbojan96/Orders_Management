@@ -10,6 +10,7 @@ import Presentation.Controller;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class BaseBLL {
@@ -73,7 +74,7 @@ public class BaseBLL {
             JOptionPane.showMessageDialog(null, "Could not delete the contents so far in order to view the elements: " + e.getMessage());
         }
     }
-    protected void updateWithAllElementsFromDB(String table) throws NoSuchFieldException, IllegalAccessException {
+    protected void updateWithAllElementsFromDB(String table) throws NoSuchFieldException, IllegalAccessException, SQLException {
         initializeFields();
 
         deleteContents();

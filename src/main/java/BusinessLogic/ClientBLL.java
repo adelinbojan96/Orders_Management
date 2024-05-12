@@ -6,12 +6,12 @@ import Model.ObjectModel;
 import Presentation.Controller;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class ClientBLL extends BaseBLL{
     ClientDAO clientDAO;
     Controller controller;
-    public ClientBLL(Controller controller)
-    {
+    public ClientBLL(Controller controller) throws SQLException {
         super(controller);
         this.controller = controller;
         this.clientDAO = new ClientDAO();
@@ -71,7 +71,7 @@ public class ClientBLL extends BaseBLL{
     {
         try {
             updateWithAllElementsFromDB("Client");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
         }
     }

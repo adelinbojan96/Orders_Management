@@ -6,12 +6,12 @@ import Model.Product;
 import Presentation.Controller;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class ProductBLL extends BaseBLL{
     ProductDAO productDAO;
     Controller controller;
-    public ProductBLL(Controller controller)
-    {
+    public ProductBLL(Controller controller) throws SQLException {
         super(controller);
         this.controller = controller;
         this.productDAO = new ProductDAO();
@@ -23,7 +23,7 @@ public class ProductBLL extends BaseBLL{
         if(unique)
         {
             productDAO.addProduct(newProduct);
-            Object[] inputData = new Object[]{id, productName, description, price, category, quantity};
+            Object[] inputData = new Object[]{id, productName, description, price, category, quantity, null};
             try {
                 updateTable(newProduct, inputData, "Add");
             } catch (Exception e) {
@@ -72,6 +72,8 @@ public class ProductBLL extends BaseBLL{
         try {
             updateWithAllElementsFromDB("Product");
         } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

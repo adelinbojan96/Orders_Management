@@ -11,113 +11,36 @@ import Model.Client;
 
 import javax.swing.*;
 
-public class ClientDAO {
-    private Connection connection;
-    public ClientDAO()
-    {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        try {
-            connection = connectionFactory.getConnection();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-        }
+public class ClientDAO extends AbstractDAO<Client>{
+    private final Connection connection;
+    public ClientDAO() throws SQLException {
+        super(new ConnectionFactory().getConnection());
+        this.connection = new ConnectionFactory().getConnection();
     }
     public boolean checkUniqueness(int id)
     {
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            String query = "SELECT COUNT(*) FROM client WHERE id = ?";
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-
-            resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                int count = resultSet.getInt(1);
-                return count == 0;
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-            }
-        }
-        return false;
+        if(id > 0)
+            return findById(id) == null;
+        else
+            return false;
     }
     public void addClient(Client client)
     {
-        PreparedStatement statement = null;
-        try {
-            String insertQuery = "INSERT INTO client (id, name, email, age) VALUES (?, ?, ?, ?)";
-            statement = updateClient(insertQuery, client);
-
-            int rowsInserted = statement.executeUpdate();
-            if (rowsInserted > 0) {
-                JOptionPane.showMessageDialog(null, "A new client was inserted successfully!");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-        } finally {
-            try {
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-            }
-        }
+        if(client!= null)
+            insert(client);
+        else
+            JOptionPane.showMessageDialog(null, "Client is null");
     }
     public void editClient(int id, Client newClient)
     {
-        PreparedStatement updateStatement = null;
-        try {
-            String updateQuery = "UPDATE client SET id = ?, name = ?, email = ?, age = ? WHERE id = ?";
-            updateStatement = updateClient(updateQuery, newClient);
-            updateStatement.setInt(5, id);
-
-            int rowsUpdated = updateStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(null, "Client with ID " + id + " was updated successfully!");
-            } else {
-                JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No update performed.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-        } finally {
-            try {
-                if (updateStatement != null) updateStatement.close();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-            }
-        }
+        if(newClient!=null)
+            edit(newClient,id);
+        else
+            JOptionPane.showMessageDialog(null, "Client is null");
     }
-    public void deleteClient(int id)
-    {
-        PreparedStatement statement = null;
-        try {
-            String deleteQuery = "DELETE FROM client WHERE id = ?";
-            statement = connection.prepareStatement(deleteQuery);
-            statement.setInt(1, id);
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                JOptionPane.showMessageDialog(null, "Client with ID " + id + " was deleted successfully!");
-            } else
-                JOptionPane.showMessageDialog(null, "No client found with ID " + id + ". No deletion performed.");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-        } finally {
-            try {
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-            }
-        }
-    }
+    public void deleteClient(int id){ delete(id); }
     public ArrayList<Object[]> getAllClients() {
+        /*
         ArrayList<Object[]> clients = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -138,24 +61,11 @@ public class ClientDAO {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
         } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "SQL Exception " + e.getMessage());
-            }
+            closeResources(resultSet, statement);
         }
         return clients;
+         */
+        return getAll();
     }
-    private PreparedStatement updateClient(String updateQuery, Client newClient) throws SQLException {
-        PreparedStatement updateStatement;
-        updateStatement = connection.prepareStatement(updateQuery);
-        updateStatement.setInt(1, newClient.id());
-        updateStatement.setString(2, newClient.name());
-        updateStatement.setString(3, newClient.email());
-        updateStatement.setInt(4, newClient.age());
 
-        return updateStatement;
-    }
 }
-
