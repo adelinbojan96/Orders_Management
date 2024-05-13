@@ -1,6 +1,8 @@
 package Presentation;
 
 import BusinessLogic.ClientBLL;
+import BusinessLogic.LogBLL;
+import BusinessLogic.OrderBLL;
 import BusinessLogic.ProductBLL;
 
 import javax.swing.*;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Controller {
-    MainView mainFrame;
     private JButton addButton;
     private JButton editButton;
     private JButton deleteButton;
@@ -21,14 +22,14 @@ public class Controller {
     private final DefaultTableModel tableModel;
     private JTable elementsTable = null;
     private final ArrayList<Object[]> objectsInTable;
-    public Controller(MainView mainFrame, String choice) throws SQLException {
-        this.mainFrame = mainFrame;
+    public Controller(String choice) throws SQLException, NoSuchFieldException, IllegalAccessException {
         this.tableModel = new DefaultTableModel();
         this.objectsInTable = new ArrayList<>();
-        if(choice.equals("Client"))
-            showClientOperations();
-        else if(choice.equals("Product"))
-            showProductOperations();
+        switch (choice) {
+            case "Client" -> showClientOperations();
+            case "Product" -> showProductOperations();
+            case "Log" -> showLogView();
+        }
     }
     private void showClientOperations() throws SQLException {
         ClientBLL clientBLL = new ClientBLL(this);
@@ -39,7 +40,7 @@ public class Controller {
         clientFrame.setLayout(new BorderLayout());
 
         //creating a table for displaying the clients with basic information
-        JScrollPane clientScrollPane = getScrollPaneClient();
+        JScrollPane clientScrollPane = getScrollPane();
         clientFrame.add(clientScrollPane, BorderLayout.CENTER);
 
         //adding buttons
@@ -74,7 +75,7 @@ public class Controller {
         productFrame.setSize(600, 400);
         productFrame.setLayout(new BorderLayout());
 
-        JScrollPane productScrollPane = getScrollPaneProduct();
+        JScrollPane productScrollPane = getScrollPane();
         productFrame.add(productScrollPane, BorderLayout.CENTER);
 
         JPanel productButtonPanel = getButtons("Product");
@@ -100,12 +101,29 @@ public class Controller {
             }
         });
     }
-    private JScrollPane getScrollPaneClient()
-    {
-        this.elementsTable = new JTable(tableModel);
-        return new JScrollPane(elementsTable);
+    void showLogView() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        LogBLL logBLL = new LogBLL(this);
+
+        JFrame logFrame = new JFrame("Log Operations");
+        logFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        logFrame.setSize(600, 400);
+        logFrame.setLayout(new BorderLayout());
+
+        JScrollPane logScrollPane = getScrollPane();
+        logFrame.add(logScrollPane, BorderLayout.CENTER);
+
+        logBLL.viewLog();
+        logFrame.setVisible(true);
+
+        logFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                new ProductOrders(Controller.this);
+            }
+        });
     }
-    private JScrollPane getScrollPaneProduct()
+    private JScrollPane getScrollPane()
     {
         this.elementsTable = new JTable(tableModel);
         return new JScrollPane(elementsTable);
@@ -249,6 +267,21 @@ public class Controller {
         else
             JOptionPane.showMessageDialog(null, "Please select an item before deleting something.");
     }
+    public void addOrder(JButton orderTheProductButton, JTextArea clientIdTextArea, JTextArea productIdTextArea, JTextArea quantityTextArea) {
+        orderTheProductButton.addActionListener(e -> {
+            try {
+                int clientId = Integer.parseInt(clientIdTextArea.getText());
+                int productId = Integer.parseInt(productIdTextArea.getText());
+                int quantity = Integer.parseInt(quantityTextArea.getText());
+
+                new OrderBLL(Controller.this).addOrder(clientId, productId, quantity);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter valid integers for Client ID, Product ID, and Quantity.");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
     private boolean clientValidity(String id, String name, String email, String age)
     {
         return !Objects.equals(id, null) && !Objects.equals(name, null) && !Objects.equals(email, null) && !Objects.equals(age, null);
@@ -259,4 +292,3 @@ public class Controller {
                 && !Objects.equals(category, null) && !Objects.equals(quantity, null);
     }
 }
-

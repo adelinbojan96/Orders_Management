@@ -19,11 +19,9 @@ public class AbstractDAO<T> {
         this.connection = connection;
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
-
     private String createSelectQuery() {
         return "SELECT * FROM " + type.getSimpleName() + " WHERE id=?";
     }
-
     public T findById(int id) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -81,7 +79,6 @@ public class AbstractDAO<T> {
         }
         return paramValues;
     }
-
     private Constructor<T> getMatchingConstructor(List<Object> paramValues) throws NoSuchMethodException {
         Class<?>[] paramTypes = new Class<?>[paramValues.size()];
         for (int i = 0; i < paramValues.size(); i++) {
@@ -100,6 +97,7 @@ public class AbstractDAO<T> {
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
+                if(className.equals("Orderr")) className = className.substring(0, 5);
                 JOptionPane.showMessageDialog(null, "A new " + className + " was inserted successfully!");
             }
         } catch (SQLException e) {

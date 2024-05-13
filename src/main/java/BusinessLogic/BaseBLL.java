@@ -1,10 +1,7 @@
 package BusinessLogic;
 
-import DataAccess.ClientDAO;
-import DataAccess.ProductDAO;
-import Model.Client;
 import Model.ObjectModel;
-import Model.Product;
+
 import Presentation.Controller;
 
 import javax.swing.*;
@@ -74,44 +71,22 @@ public class BaseBLL {
             JOptionPane.showMessageDialog(null, "Could not delete the contents so far in order to view the elements: " + e.getMessage());
         }
     }
-    protected void updateWithAllElementsFromDB(String table) throws NoSuchFieldException, IllegalAccessException, SQLException {
+    protected void updateWithAllElementsFromDB(ObjectModel objectModel, ArrayList<Object[]> items) throws NoSuchFieldException, IllegalAccessException, SQLException {
         initializeFields();
 
         deleteContents();
 
-        ArrayList<Object[]> items = new ArrayList<>();
-        if(table.equals("Client"))
-        {
-            ClientDAO clientDAO = new ClientDAO();
-            items = clientDAO.getAllClients();
-            Object[] firstItem = items.getFirst();
-            generateTableHeaders(new Client((Integer) firstItem[0], (String)firstItem[1], (String)firstItem[2], (int)firstItem[3]));
-        }
-        else if(table.equals("Product"))
-        {
-            ProductDAO productDAO = new ProductDAO();
-            items = productDAO.getAllProducts();
-            Object[] firstItem = items.getFirst();
-            generateTableHeaders(new Product((Integer) firstItem[0], (String)firstItem[1],
-                    (String) firstItem[2], (float) firstItem[3], (String) firstItem[4], (int) firstItem[5]));
-        }
+        generateTableHeaders(objectModel);
+
         for (Object[] item : items) {
             addToTable(item);
         }
     }
-    private void generateTableHeaders(ObjectModel firstItem) {
+    protected void generateTableHeaders(ObjectModel firstItem) {
         if (tableModel.getColumnCount() == 0 && firstItem != null) {
 
-            Class<?> itemClass;
-            if (firstItem instanceof Client) {
-                itemClass = Client.class;
-            } else if (firstItem instanceof Product) {
-                itemClass = Product.class;
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Could not generate headers due to the incorrect object parsing");
-                return;
-            }
+            Class<?> itemClass = firstItem.getClass();
+
             Field[] fields = itemClass.getDeclaredFields();
 
             for (Field field : fields) {

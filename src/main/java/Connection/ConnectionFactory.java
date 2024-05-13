@@ -1,5 +1,6 @@
 package Connection;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ public class ConnectionFactory {
         try (InputStream input = new FileInputStream("src/main/java/Connection/db.properties")) {
             properties.load(input);
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error trying to connect to the database");
         }
     }
     public Connection getConnection() throws SQLException {

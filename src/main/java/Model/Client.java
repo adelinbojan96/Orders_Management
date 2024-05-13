@@ -11,19 +11,15 @@ public class Client implements ObjectModel {
         this.email = email;
         this.age = age;
     }
-
     public int id() {
         return id;
     }
-
     public String name() {
         return name;
     }
-
     public String email() {
         return email;
     }
-
     public int age() {
         return age;
     }

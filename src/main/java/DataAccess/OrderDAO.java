@@ -1,43 +1,43 @@
 package DataAccess;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import Connection.ConnectionFactory;
-import Model.Client;
-import Model.Order;
+import Model.Orderr;
 
 import javax.swing.*;
 
-public class OrderDAO extends AbstractDAO<Order>{
-    private final Connection connection;
-    public OrderDAO(Connection connection) throws SQLException {
-        super(connection);
-        this.connection = new ConnectionFactory().getConnection();
+public class OrderDAO extends AbstractDAO<Orderr>{
+    public OrderDAO() throws SQLException {
+        super(new ConnectionFactory().getConnection());
+
     }
-    public boolean checkUniqueness(int id)
+    public void addOrder(Orderr orderr)
     {
-        if(id > 0)
-            return findById(id) == null;
-        else
-            return false;
-    }
-    public void addOrder(Order order)
-    {
-        if(order!= null)
-            insert(order);
+        if(orderr != null)
+            insert(orderr);
         else
             JOptionPane.showMessageDialog(null, "Order is null");
     }
-    public void editOrder(int id, Order newOrder)
-    {
-        if(newOrder!=null)
-            edit(newOrder,id);
-        else
-            JOptionPane.showMessageDialog(null, "Order is null");
+    public int getValidId() throws SQLException {
+        Connection connection = new ConnectionFactory().getConnection();
+        int maxId = 0;
+        try {
+            String query = "SELECT MAX(id) AS max_id FROM Orderr";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                maxId = resultSet.getInt("max_id");
+            }
+            return maxId + 1;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "SQL exception when creating a new id for Order");
+        }
+        return 1;
     }
-    public void deleteOrder(int id){ delete(id);}
 }

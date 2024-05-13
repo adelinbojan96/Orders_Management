@@ -33,23 +33,27 @@ public class MainView extends JDialog{
         performClientOperationButton.addActionListener(e -> {
             dispose();
             try {
-                new Controller(MainView.this, "Client");
-            } catch (SQLException ex) {
+                new Controller("Client");
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
                 throw new RuntimeException(ex);
             }
         });
         performProductOperationButton.addActionListener(e -> {
             dispose();
             try {
-                new Controller(MainView.this, "Product");
-            } catch (SQLException ex) {
+                new Controller("Product");
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
                 throw new RuntimeException(ex);
             }
         });
         performOrderOperationButton.addActionListener(e ->
         {
             dispose();
-            new ProductOrders();
+            try {
+                new ProductOrders(new Controller("Orderr"));
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         setModal(true);
         setVisible(true);

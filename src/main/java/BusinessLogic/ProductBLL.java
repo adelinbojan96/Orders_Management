@@ -7,6 +7,7 @@ import Presentation.Controller;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ProductBLL extends BaseBLL{
     ProductDAO productDAO;
@@ -70,10 +71,13 @@ public class ProductBLL extends BaseBLL{
     public void viewProducts()
     {
         try {
-            updateWithAllElementsFromDB("Product");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+            ProductDAO productDAO = new ProductDAO();
+            ArrayList<Object[]> items = productDAO.getAllProducts();
+            Object[] firstItem = items.getFirst();
+
+            updateWithAllElementsFromDB(new Product((Integer) firstItem[0], (String) firstItem[1],
+                    (String) firstItem[2], (float) firstItem[3], (String) firstItem[4], (int) firstItem[5]), items);
+        } catch (NoSuchFieldException | IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
         }
     }

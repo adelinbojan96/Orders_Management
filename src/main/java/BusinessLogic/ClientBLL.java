@@ -7,6 +7,7 @@ import Presentation.Controller;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ClientBLL extends BaseBLL{
     ClientDAO clientDAO;
@@ -70,7 +71,11 @@ public class ClientBLL extends BaseBLL{
     public void viewClients()
     {
         try {
-            updateWithAllElementsFromDB("Client");
+            ArrayList<Object[]> items = clientDAO.getAllClients();
+            Object[] firstItem = items.getFirst();
+
+            updateWithAllElementsFromDB(new Client((Integer) firstItem[0], (String) firstItem[1],
+                    (String) firstItem[2], (int) firstItem[3]), items);
         } catch (NoSuchFieldException | IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
         }

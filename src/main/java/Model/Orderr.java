@@ -1,11 +1,11 @@
 package Model;
 
-public class Order implements ObjectModel{
+public class Orderr implements ObjectModel{
     private final int id;
     private final int id_client;
     private final int id_product;
     private final int quantity;
-    public Order(Integer id, Integer id_client, Integer id_product, Integer quantity)
+    public Orderr(Integer id, Integer id_client, Integer id_product, Integer quantity)
     {
         this.id = id;
         this.id_client = id_client;
