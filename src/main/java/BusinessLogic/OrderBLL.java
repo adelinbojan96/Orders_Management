@@ -22,8 +22,8 @@ public class OrderBLL extends BaseBLL{
     }
     public void addOrder(int idClient, int idProduct, int quantity) throws SQLException {
 
-        boolean clientExist = !clientDAO.checkUniqueness(idClient);
-        boolean productExist = !productDAO.checkUniqueness(idProduct);
+        boolean clientExist = clientDAO.findById(idClient) != null;
+        boolean productExist = productDAO.findById(idProduct) != null;
         if(quantity > 0 && clientExist && productExist)
         {
             //check if current quantity is lower than what product has
@@ -38,6 +38,8 @@ public class OrderBLL extends BaseBLL{
             else
                 JOptionPane.showMessageDialog(null, "The quantity demanded is greater than the quantity supplied.");
         }
+        else
+            JOptionPane.showMessageDialog(null, "Fields are not completed correctly. Please make sure the client and product exist and quantity is greater than 0");
     }
     private void addInLogTable(int id_order, int id_client, int id_product, int quantity) throws SQLException {
         Orderr orderr = new Orderr(id_order, id_client, id_product, quantity);

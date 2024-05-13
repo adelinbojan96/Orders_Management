@@ -158,12 +158,12 @@ public class Controller {
         inputPanel.add(emailField);
         inputPanel.add(new JLabel("Age:"));
         inputPanel.add(ageField);
-        boolean validity = clientValidity(idField.getText(), nameField.getText(), emailField.getText(), ageField.getText());
         int result = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Client Details", JOptionPane.OK_CANCEL_OPTION);
+        boolean validity = clientValidity(idField.getText(), nameField.getText(), emailField.getText(), ageField.getText());
         if (result == JOptionPane.OK_OPTION && validity) {
             return new Object[]{Integer.parseInt(idField.getText()), nameField.getText(), emailField.getText(), Integer.parseInt(ageField.getText())};
         }
-        JOptionPane.showMessageDialog(null, "Please complete all fields.");
+        JOptionPane.showMessageDialog(null, "Please complete all fields correctly.");
         return null;
     }
     private Object[] showInputDialogProduct() {
@@ -188,13 +188,13 @@ public class Controller {
         inputPanel.add(categoryField);
         inputPanel.add(new JLabel("Quantity:"));
         inputPanel.add(quantityField);
-        boolean validity = productValidity(idField.getText(), productNameField.getText(), descriptionField.getText(), priceField.getText(), categoryField.getText(), quantityField.getText());
         int result = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Product Details", JOptionPane.OK_CANCEL_OPTION);
+        boolean validity = productValidity(idField.getText(), productNameField.getText(), descriptionField.getText(), priceField.getText(), categoryField.getText(), quantityField.getText());
         if (result == JOptionPane.OK_OPTION && validity) {
             return new Object[]{Integer.parseInt(idField.getText()), productNameField.getText(), descriptionField.getText(),
                     Float.parseFloat(priceField.getText()), categoryField.getText(), Integer.parseInt(quantityField.getText())};
         }
-        JOptionPane.showMessageDialog(null, "Please complete all fields.");
+        JOptionPane.showMessageDialog(null, "Please complete all fields correctly.");
         return null;
     }
     private void addClient(ClientBLL clientBLL)
@@ -282,13 +282,12 @@ public class Controller {
             }
         });
     }
-    private boolean clientValidity(String id, String name, String email, String age)
-    {
-        return !Objects.equals(id, null) && !Objects.equals(name, null) && !Objects.equals(email, null) && !Objects.equals(age, null);
+    private boolean clientValidity(String id, String name, String email, String age) {
+        try { return Integer.parseInt(id) > 0 &&  Integer.parseInt(age) > 0 && !Objects.equals(name, null) && !Objects.equals(email, null);
+        } catch (NumberFormatException e) { return false; }
     }
-    private boolean productValidity(String id, String productName, String description, String price, String category, String quantity)
-    {
-        return !Objects.equals(id, null) && !Objects.equals(productName, null) && !Objects.equals(description, null) && !Objects.equals(price, null)
-                && !Objects.equals(category, null) && !Objects.equals(quantity, null);
+    private boolean productValidity(String id, String productName, String description, String price, String category, String quantity) {
+        try { return  Integer.parseInt(id) > 0 && Float.parseFloat(price) > 0 && Integer.parseInt(quantity) > 0 && !Objects.equals(productName, null) && !Objects.equals(description, null) && !Objects.equals(category, null);
+        } catch (NumberFormatException e) { return false; }
     }
 }
