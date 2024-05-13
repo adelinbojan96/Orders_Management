@@ -1,5 +1,8 @@
 package Model;
 
+/**
+ * Client class implements ObjectModel
+ */
 public class Client implements ObjectModel {
     private final int id;
     private final String name;

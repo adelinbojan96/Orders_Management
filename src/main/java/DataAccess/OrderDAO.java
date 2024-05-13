@@ -10,12 +10,18 @@ import Connection.ConnectionFactory;
 import Model.Orderr;
 
 import javax.swing.*;
-
+/**
+ * Data Access Object for handling Order operations.
+ */
 public class OrderDAO extends AbstractDAO<Orderr>{
     public OrderDAO() throws SQLException {
         super(new ConnectionFactory().getConnection());
 
     }
+    /**
+     * Adds an order to the database.
+     * @param orderr the order object to be added
+     */
     public void addOrder(Orderr orderr)
     {
         if(orderr != null)
@@ -23,6 +29,12 @@ public class OrderDAO extends AbstractDAO<Orderr>{
         else
             JOptionPane.showMessageDialog(null, "Order is null");
     }
+
+    /**
+     * Retrieves a valid ID for a new order.
+     * @return a valid ID for a new order
+     * @throws SQLException if a database access error occurs
+     */
     public int getValidId() throws SQLException {
         Connection connection = new ConnectionFactory().getConnection();
         int maxId = 0;

@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Controller class used to control main activities from other classes
+ */
 public class Controller {
     private JButton addButton;
     private JButton editButton;

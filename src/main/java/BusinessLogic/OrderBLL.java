@@ -12,6 +12,9 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * Class for performing the logic of creating an order object
+ */
 public class OrderBLL extends BaseBLL{
     private final OrderDAO orderDAO = new OrderDAO();
     private final ClientDAO clientDAO = new ClientDAO();
@@ -20,6 +23,14 @@ public class OrderBLL extends BaseBLL{
     public OrderBLL(Controller controller) throws SQLException {
         super(controller);
     }
+
+    /**
+     * adds an order to database and also creates a bill adding it to database
+     * @param idClient id of the client
+     * @param idProduct id of the product
+     * @param quantity quantity demanded
+     * @throws SQLException In case connection can not be established => error
+     */
     public void addOrder(int idClient, int idProduct, int quantity) throws SQLException {
 
         boolean clientExist = clientDAO.findById(idClient) != null;
@@ -41,6 +52,15 @@ public class OrderBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "Fields are not completed correctly. Please make sure the client and product exist and quantity is greater than 0");
     }
+
+    /**
+     * Adds the bill in a log table
+     * @param id_order id of the current order
+     * @param id_client id of the client
+     * @param id_product id of the product
+     * @param quantity current quantity
+     * @throws SQLException possible sql exception in case connection can not be established => error
+     */
     private void addInLogTable(int id_order, int id_client, int id_product, int quantity) throws SQLException {
         Orderr orderr = new Orderr(id_order, id_client, id_product, quantity);
         orderDAO.addOrder(orderr);

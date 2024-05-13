@@ -1,5 +1,8 @@
 package Model;
 
+/**
+ * Product class implements objectModel
+ */
 public class Product implements ObjectModel {
     private final int id;
     private final String name;

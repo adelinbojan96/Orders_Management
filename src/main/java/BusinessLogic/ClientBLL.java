@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * ClientBLL which represents the logic for the BaseBLL
+ */
 public class ClientBLL extends BaseBLL{
     ClientDAO clientDAO;
     Controller controller;
@@ -17,6 +20,14 @@ public class ClientBLL extends BaseBLL{
         this.controller = controller;
         this.clientDAO = new ClientDAO();
     }
+
+    /**
+     * Adds client to Database performing a certain logic firstly
+     * @param id id of the client
+     * @param name name of the client
+     * @param email email of the client
+     * @param age age of the client
+     */
     public void addClient(int id, String name, String email, int age){
         Client newClient = new Client(id, name, email, age);
         //first of all we need to check uniqueness
@@ -34,6 +45,16 @@ public class ClientBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The id is not unique, please enter something else");
     }
+
+    /**
+     * Edits the client in the database and in graphical table
+     * @param firstIdDB id from the database
+     * @param firstIdTable id from table
+     * @param id new id
+     * @param name new name
+     * @param email new email
+     * @param age new age
+     */
     public void editClient(int firstIdDB, int firstIdTable, int id, String name, String email, int age)
     {
         Client newClient = new Client(id, name, email, age);
@@ -51,6 +72,12 @@ public class ClientBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The user with the id " + firstIdDB + " does not exist in the database");
     }
+
+    /**
+     * Deletes a client from the database and removes it from table
+     * @param firstIdDB id from database
+     * @param firstIdTable id from table
+     */
     public void deleteClient(int firstIdDB, int firstIdTable)
     {
         boolean unique = clientDAO.checkUniqueness(firstIdDB);
@@ -68,6 +95,10 @@ public class ClientBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The user with the id " + firstIdDB + " does not exist in the database");
     }
+
+    /**
+     * View Clients
+     */
     public void viewClients()
     {
         try {
@@ -76,7 +107,7 @@ public class ClientBLL extends BaseBLL{
 
             updateWithAllElementsFromDB(new Client((Integer) firstItem[0], (String) firstItem[1],
                     (String) firstItem[2], (int) firstItem[3]), items);
-        } catch (NoSuchFieldException | IllegalAccessException | SQLException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }

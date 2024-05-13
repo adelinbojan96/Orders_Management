@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+/**
+ * An abstract Data Access Object class providing common functionality for accessing and manipulating entities in the database
+ * @param <T> the type of entity managed by this DAO
+ */
 public class AbstractDAO<T> {
     private final Class<T> type;
     private final Connection connection;
@@ -19,9 +23,20 @@ public class AbstractDAO<T> {
         this.connection = connection;
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
+
+    /**
+     * Creates a simple select query based on id
+     * @return returns the query
+     */
     private String createSelectQuery() {
         return "SELECT * FROM " + type.getSimpleName() + " WHERE id=?";
     }
+
+    /**
+     * Finds the object from database by id
+     * @param id id to be searched
+     * @return the object or null if not found
+     */
     public T findById(int id) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -41,6 +56,12 @@ public class AbstractDAO<T> {
         }
         return null;
     }
+
+    /**
+     * Creates a single object based on the resultSet
+     * @param resultSet resultSet from findId
+     * @return returns a new instance with the aid of the resultSet
+     */
     private T createObject(ResultSet resultSet) {
         try {
             if (!resultSet.next()) {
@@ -57,6 +78,14 @@ public class AbstractDAO<T> {
             return null;
         }
     }
+
+    /**
+     * Extracts parameter values from the given ResultSet based on the entity's fields.
+     *
+     * @param resultSet the ResultSet containing the data.
+     * @return a list of parameter values extracted from the ResultSet.
+     * @throws SQLException if a database access error occurs.
+     */
     private List<Object> getParamValues(ResultSet resultSet) throws SQLException {
         List<Object> paramValues = new ArrayList<>();
         Field[] declaredFields = type.getDeclaredFields();
@@ -79,6 +108,13 @@ public class AbstractDAO<T> {
         }
         return paramValues;
     }
+
+    /**
+     * Retrieves the constructor of the entity class that matches the types of the provided parameter values.
+     * @param paramValues the parameter values for which to find a matching constructor.
+     * @return the constructor of the entity class that matches the parameter types.
+     * @throws NoSuchMethodException if a matching constructor cannot be found.
+     */
     private Constructor<T> getMatchingConstructor(List<Object> paramValues) throws NoSuchMethodException {
         Class<?>[] paramTypes = new Class<?>[paramValues.size()];
         for (int i = 0; i < paramValues.size(); i++) {
@@ -86,6 +122,11 @@ public class AbstractDAO<T> {
         }
         return type.getConstructor(paramTypes);
     }
+
+    /**
+     * Inserts a new entity into the database.
+     * @param entity the entity to be inserted.
+     */
     public void insert(T entity) {
         PreparedStatement statement = null;
         try {
@@ -106,6 +147,12 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
+
+    /**
+     * Edits an entity in the database
+     * @param entity new entity
+     * @param id the id to be modified
+     */
     public void edit(T entity, int id) {
         PreparedStatement statement = null;
         try {
@@ -129,6 +176,11 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
+
+    /**
+     * Deletes an id
+     * @param id id of the entity from database to be deleted
+     */
     public void delete(int id)
     {
         PreparedStatement statement = null;
@@ -149,6 +201,11 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
+
+    /**
+     * Gets all elements and transforms into array of type Object[]
+     * @return returns array of type Object[]
+     */
     public ArrayList<Object[]> getAll() {
         ArrayList<Object[]> records = new ArrayList<>();
         PreparedStatement statement = null;
@@ -220,6 +277,12 @@ public class AbstractDAO<T> {
             }
         }
     }
+
+    /**
+     * Closes the resources
+     * @param resultSet closes resultSet
+     * @param statement closes statement
+     */
     protected void closeResources(ResultSet resultSet, PreparedStatement statement) {
         try {
             if (resultSet != null) resultSet.close();

@@ -1,7 +1,5 @@
 package Presentation;
 
-import BusinessLogic.OrderBLL;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -9,6 +7,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+/**
+ * Frame for ordering products for certain clients
+ */
 public class ProductOrders extends JDialog{
     private JPanel mainPanel;
     private JTextArea clientIdTextArea;
@@ -57,6 +58,10 @@ public class ProductOrders extends JDialog{
                 new EmptyBorder(5, 20, 5, 20)
         ));
     }
+
+    /**
+     * action listener for clicking a text label.
+     */
     private void logClicked(){
         accessLog.addMouseListener(new MouseAdapter() {
             @Override

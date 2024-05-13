@@ -1,5 +1,8 @@
 package Model;
 
+/**
+ * Order class implements objectModel
+ */
 public class Orderr implements ObjectModel{
     private final int id;
     private final int id_client;

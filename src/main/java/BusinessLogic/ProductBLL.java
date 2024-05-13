@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class for performing the logic of creating a product and insert it in database
+ */
 public class ProductBLL extends BaseBLL{
     ProductDAO productDAO;
     Controller controller;
@@ -17,6 +20,16 @@ public class ProductBLL extends BaseBLL{
         this.controller = controller;
         this.productDAO = new ProductDAO();
     }
+
+    /**
+     * Add a product to database
+     * @param id id of the product
+     * @param productName name of the product
+     * @param description description of the product
+     * @param price price of the product
+     * @param category category of the product
+     * @param quantity quantity of the product
+     */
     public void addProduct(int id, String productName, String description, float price, String category, int quantity)
     {
         Product newProduct = new Product(id, productName, description, price, category, quantity);
@@ -34,6 +47,17 @@ public class ProductBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The id is not unique, please enter something else");
     }
+    /**
+     * edits an existing product in the database.
+     * @param firstIdDB    id of the product in the database.
+     * @param firstIdTable id of the product in the table.
+     * @param id           new ID of the product.
+     * @param productName  new name of the product.
+     * @param description  new description of the product.
+     * @param price        new price of the product.
+     * @param category     new category of the product.
+     * @param quantity     new quantity of the product.
+     */
     public void editProduct(int firstIdDB, int firstIdTable, int id, String productName, String description, float price, String category, int quantity)
     {
         Product newProduct = new Product(id, productName, description, price, category, quantity);
@@ -51,6 +75,11 @@ public class ProductBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The product with the id " + firstIdDB + " does not exist in the database");
     }
+    /**
+     * deletes a product from the database.
+     * @param firstIdDB    id of the product in the database.
+     * @param firstIdTable id of the product in the table.
+     */
     public void deleteProduct(int firstIdDB, int firstIdTable)
     {
         boolean unique = productDAO.checkUniqueness(firstIdDB);
@@ -68,6 +97,11 @@ public class ProductBLL extends BaseBLL{
         else
             JOptionPane.showMessageDialog(null, "The product with the id " + firstIdDB + " does not exist in the database");
     }
+
+    /**
+     * View the products in the table by retrieving everything from the database
+     */
+
     public void viewProducts()
     {
         try {

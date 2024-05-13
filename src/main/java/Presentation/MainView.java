@@ -6,6 +6,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.sql.SQLException;
 
+/**
+ * MainView is the main frame in which the user can choose the next operations
+ */
 public class MainView extends JDialog{
     private JPanel mainPanel;
     private JButton performClientOperationButton;
@@ -30,31 +33,10 @@ public class MainView extends JDialog{
         customizeButton(performProductOperationButton);
         customizeButton(performOrderOperationButton);
 
-        performClientOperationButton.addActionListener(e -> {
-            dispose();
-            try {
-                new Controller("Client");
-            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        performProductOperationButton.addActionListener(e -> {
-            dispose();
-            try {
-                new Controller("Product");
-            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        performOrderOperationButton.addActionListener(e ->
-        {
-            dispose();
-            try {
-                new ProductOrders(new Controller("Orderr"));
-            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+        clickClient();
+        clickProduct();
+        clickOrder();
+
         setModal(true);
         setVisible(true);
     }
@@ -70,6 +52,9 @@ public class MainView extends JDialog{
                 new EmptyBorder(5, 20, 5, 20)
         ));
     }
+    /**
+     * function for adding visually images from a certain folder
+     */
     private void addImages()
     {
         ImageIcon iconFirst = new ImageIcon("src/pictures/products.png");
@@ -78,6 +63,49 @@ public class MainView extends JDialog{
         this.imageSecond.setIcon(iconSecond);
         ImageIcon iconThird = new ImageIcon("src/pictures/orders.png");
         this.imageThird.setIcon(iconThird);
+    }
+    /**
+     * action listener for button clicked (client)
+     */
+    private void clickClient()
+    {
+        performClientOperationButton.addActionListener(e -> {
+            dispose();
+            try {
+                new Controller("Client");
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+    /**
+     * action listener for button clicked (product)
+     */
+    private void clickProduct()
+    {
+        performProductOperationButton.addActionListener(e -> {
+            dispose();
+            try {
+                new Controller("Product");
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+    /**
+     * action listener for button clicked (order)
+     */
+    private void clickOrder()
+    {
+        performOrderOperationButton.addActionListener(e ->
+        {
+            dispose();
+            try {
+                new ProductOrders(new Controller("Orderr"));
+            } catch (SQLException | NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 }
 

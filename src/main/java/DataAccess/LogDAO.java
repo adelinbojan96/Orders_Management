@@ -7,12 +7,20 @@ import Connection.ConnectionFactory;
 import Model.Bill;
 
 import javax.swing.*;
-
+/**
+ * Data Access Object for handling logging operations.
+ */
 public class LogDAO {
     private final Connection connection;
     public LogDAO() throws SQLException {
         this.connection = new ConnectionFactory().getConnection();
     }
+
+    /**
+     * Adds a bill entry to the log table.
+     * @param bill the bill object to be added to the log
+     * @throws SQLException if a database access error occurs
+     */
     public void addToLog(Bill bill) throws SQLException {
         PreparedStatement statement = null;
         try {
@@ -34,6 +42,12 @@ public class LogDAO {
             if(statement!=null) statement.close();
         }
     }
+
+    /**
+     * extracts the elements from Log table in the database
+     * @return arrayList of objects
+     * @throws SQLException in case connection is not well established
+     */
     public ArrayList<Object[]> extractLog() throws SQLException {
         ArrayList<Object[]> records = new ArrayList<>();
         PreparedStatement statement = null;

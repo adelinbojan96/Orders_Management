@@ -8,10 +8,19 @@ import Model.Product;
 
 import javax.swing.*;
 
+/**
+ * Data Access Object for handling Product operations.
+ */
 public class ProductDAO  extends AbstractDAO<Product>{
     public ProductDAO() throws SQLException {
         super(new ConnectionFactory().getConnection());
     }
+
+    /**
+     * Used findById to check uniqueness
+     * @param id id of the element
+     * @return true of false based on the existence or nonexistence
+     */
     public boolean checkUniqueness(int id)
     {
         if(id > 0)
@@ -19,6 +28,11 @@ public class ProductDAO  extends AbstractDAO<Product>{
         else
             return false;
     }
+
+    /**
+     * adds a product in database
+     * @param product product type
+     */
     public void addProduct(Product product)
     {
         if(product!= null)
@@ -26,6 +40,12 @@ public class ProductDAO  extends AbstractDAO<Product>{
         else
             JOptionPane.showMessageDialog(null, "Product is null");
     }
+
+    /**
+     * edits a product in database
+     * @param id id in database
+     * @param newProduct newProduct which is going to be added in database
+     */
     public void editProduct(int id, Product newProduct)
     {
         if(newProduct!=null)
@@ -33,7 +53,17 @@ public class ProductDAO  extends AbstractDAO<Product>{
         else
             JOptionPane.showMessageDialog(null, "Product is null");
     }
+
+    /**
+     * Deletes a product from the database based on id
+     * @param id id
+     */
     public void deleteProduct(int id) { delete(id);}
+
+    /**
+     * gets all products
+     * @return an array or objects
+     */
     public ArrayList<Object[]> getAllProducts() {
         return getAll();
     }
