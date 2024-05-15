@@ -5,7 +5,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.sql.SQLException;
-
 /**
  * MainView is the main frame in which the user can choose the next operations
  */

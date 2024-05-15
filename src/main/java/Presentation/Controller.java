@@ -42,11 +42,9 @@ public class Controller {
         clientFrame.setSize(600, 400);
         clientFrame.setLayout(new BorderLayout());
 
-        //creating a table for displaying the clients with basic information
         JScrollPane clientScrollPane = getScrollPane();
         clientFrame.add(clientScrollPane, BorderLayout.CENTER);
 
-        //adding buttons
         JPanel clientButtonPanel = getButtons("Client");
 
         addButton.addActionListener(e -> addClient(clientBLL));
@@ -66,10 +64,8 @@ public class Controller {
             @Override
             public void windowClosed(WindowEvent e) {
                 super.windowClosed(e);
-                new MainView();
-            }
-        });
-    }
+                new MainView();}
+        });}
     private void showProductOperations() throws SQLException {
         ProductBLL productBLL = new ProductBLL(this);
 
@@ -100,10 +96,8 @@ public class Controller {
             @Override
             public void windowClosed(WindowEvent e) {
                 super.windowClosed(e);
-                new MainView();
-            }
-        });
-    }
+                new MainView();}
+        });}
     void showLogView() throws SQLException, NoSuchFieldException, IllegalAccessException {
         LogBLL logBLL = new LogBLL(this);
 

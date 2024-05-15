@@ -7,9 +7,7 @@ import Presentation.Controller;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.ArrayList;
-
 /**
  * BaseBLL is a class which is parent to all the classes from the BusinessLogic package: ClientBLL, LogBLL, OrderBLL,ProductBLL
  */
@@ -20,7 +18,6 @@ public class BaseBLL {
     public BaseBLL(Controller controller) {
         this.controller = controller;
     }
-
     /**
      * Uses reflection to get access for the objectsInTable array from the Controller class
      * @throws NoSuchFieldException In case it does not find a field (objectsInTable or tableModel) => returns an error
@@ -37,7 +34,6 @@ public class BaseBLL {
         tableModelField.setAccessible(true);
         this.tableModel = (DefaultTableModel) tableModelField.get(controller);
     }
-
     /**
      * Updates the tableModel and objectsInTable according to parameters
      * @param objectModel Either Bill, Client or Product
@@ -67,7 +63,6 @@ public class BaseBLL {
             }
         }
     }
-
     /**
      * Adds object item to table
      * @param newItem Client, product or bill in Object[] form
@@ -77,7 +72,6 @@ public class BaseBLL {
         objectsInTable.add(newItem);
         tableModel.addRow(newItem);
     }
-
     /**
      * Removes element from table according to id
      * @param id id for element in table (to be removed)
@@ -89,7 +83,6 @@ public class BaseBLL {
         if(tableModel.getRowCount() == 0) //if empty, delete the header
             tableModel.setColumnCount(0);
     }
-
     /**
      * Deletes everything from table
      */
@@ -102,7 +95,6 @@ public class BaseBLL {
             JOptionPane.showMessageDialog(null, "Could not delete the contents so far in order to view the elements: " + e.getMessage());
         }
     }
-
     /**
      *
      * @param objectModel Client, product or bill
@@ -121,7 +113,6 @@ public class BaseBLL {
             addToTable(item);
         }
     }
-
     /**
      * Generate header in case one element exists in table
      * @param firstItem first item (if it exists) from the table from which (through reflection) we find the properties(needed for columns)

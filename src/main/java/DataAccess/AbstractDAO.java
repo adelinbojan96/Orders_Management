@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * An abstract Data Access Object class providing common functionality for accessing and manipulating entities in the database
  * @param <T> the type of entity managed by this DAO
  */
-public class AbstractDAO<T> {
+public abstract class AbstractDAO<T> {
     private final Class<T> type;
     private final Connection connection;
     private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class.getName());
@@ -23,7 +23,6 @@ public class AbstractDAO<T> {
         this.connection = connection;
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
-
     /**
      * Creates a simple select query based on id
      * @return returns the query
@@ -31,7 +30,6 @@ public class AbstractDAO<T> {
     private String createSelectQuery() {
         return "SELECT * FROM " + type.getSimpleName() + " WHERE id=?";
     }
-
     /**
      * Finds the object from database by id
      * @param id id to be searched
@@ -56,7 +54,6 @@ public class AbstractDAO<T> {
         }
         return null;
     }
-
     /**
      * Creates a single object based on the resultSet
      * @param resultSet resultSet from findId
@@ -108,7 +105,6 @@ public class AbstractDAO<T> {
         }
         return paramValues;
     }
-
     /**
      * Retrieves the constructor of the entity class that matches the types of the provided parameter values.
      * @param paramValues the parameter values for which to find a matching constructor.
@@ -122,7 +118,6 @@ public class AbstractDAO<T> {
         }
         return type.getConstructor(paramTypes);
     }
-
     /**
      * Inserts a new entity into the database.
      * @param entity the entity to be inserted.
@@ -147,7 +142,6 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
-
     /**
      * Edits an entity in the database
      * @param entity new entity
@@ -176,7 +170,6 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
-
     /**
      * Deletes an id
      * @param id id of the entity from database to be deleted
@@ -201,7 +194,6 @@ public class AbstractDAO<T> {
             closeResources(null, statement);
         }
     }
-
     /**
      * Gets all elements and transforms into array of type Object[]
      * @return returns array of type Object[]
@@ -277,7 +269,6 @@ public class AbstractDAO<T> {
             }
         }
     }
-
     /**
      * Closes the resources
      * @param resultSet closes resultSet
