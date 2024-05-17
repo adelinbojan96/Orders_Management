@@ -39,7 +39,6 @@ public class ClientDAO extends AbstractDAO<Client>{
         else
             JOptionPane.showMessageDialog(null, "Client is null");
     }
-
     /**
      * Edit this client
      * @param id id of the current client

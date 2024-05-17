@@ -29,7 +29,6 @@ public class ConnectionFactory {
             JOptionPane.showMessageDialog(null, "Error trying to connect to the database");
         }
     }
-
     /**
      * Gets connection by asking for db.url, db. Username, db. Password
      * @return returns the details needed for connecting to the database
