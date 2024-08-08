@@ -8,4 +8,5 @@ The main objective of this application was to follow the SOLID principles, makin
 # Important details
 make sure to add db.properties to src/main/java/Connection/ such that it can be accessed by ConnectionFactory
 
-![New Project (1)](https://github.com/user-attachments/assets/de22d0a7-7763-4ab1-9008-872c21d838f3)
+
+![New Project (2)](https://github.com/user-attachments/assets/5c07c45c-5837-481a-9d4e-61cd4d71a9d2)
